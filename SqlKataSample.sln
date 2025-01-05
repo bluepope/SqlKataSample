@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B11274FA-141E-4746-81C2-A074D786D8E8}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		createdb.sql = createdb.sql
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{E892DA89-7DDB-4974-8EAE-2AA93F0CD851}"

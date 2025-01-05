@@ -2,20 +2,12 @@
 using ConsoleApp1.Models;
 
 using Dapper;
-
 using MySqlConnector;
 
 using SqlKata;
 using SqlKata.Compilers;
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ConsoleApp1.Samples
 {
@@ -69,6 +61,45 @@ namespace ConsoleApp1.Samples
             
             //query.From(typeof(UserModel).GetCustomAttribute<TableAttribute>().Name);
             //query.Where(nameof(UserModel.id), 1);
+
+            SqlResult sqlResult = new MySqlCompiler().Compile(query);
+
+            Console.WriteLine("SELECT Query");
+            Console.WriteLine(sqlResult.Sql);
+            Console.WriteLine(JsonSerializer.Serialize(sqlResult.NamedBindings));
+
+            using (MySqlConnection conn = new(connectionString))
+            {
+                conn.Open();
+
+                resultList = await conn.QueryAsync<UserNickNameResponse>(sqlResult.Sql, sqlResult.NamedBindings);
+            }
+
+            UserNickNameResponse? resultData = resultList.FirstOrDefault();
+
+            Console.WriteLine($"RowCount - {resultList.Count()}");
+            Console.WriteLine($"RowData - {resultData?.Id} {resultData?.Name} {resultData?.NickName}"); //Dapper Mapping은 대소문자를 가리지 않음
+
+            return resultData;
+        }
+
+
+        public async Task<UserNickNameResponse?> SubQuerySelectAsync()
+        {
+            IEnumerable<UserNickNameResponse> resultList = [];
+
+            Query query = new();
+            query.Select("id");
+            query.Select("name");
+            query.From("user");
+
+            //서브쿼리 생성
+            Query subQuery = new();
+            subQuery.Select("user_id");
+            subQuery.From("nickname");
+
+            //서브쿼리 대입
+            query.WhereIn("id", subQuery);
 
             SqlResult sqlResult = new MySqlCompiler().Compile(query);
 

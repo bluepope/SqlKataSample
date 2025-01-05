@@ -16,7 +16,8 @@ var sample = new SqlKataSample(connectionString);
 
 
 //await sample.GetDataAsync();
-await sample.JoinSelectAsync();
+//await sample.JoinSelectAsync();
+await sample.SubQuerySelectAsync();
 
 //await sample.InsertAsync(new()
 //{
