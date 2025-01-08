@@ -1,6 +1,6 @@
 ﻿using ConsoleApp1.Samples;
 
-string connectionString = "User ID=test;Password=test;Host=192.168.0.210;Port=3306;Database=testdb;Convert Zero Datetime=True";
+string connectionString = "User ID=test;Password=test;Host=127.0.0.1;Port=3306;Database=testdb;Convert Zero Datetime=True";
 
 //1. DataTable 
 //new DataTableSample(connectionString).GetData();

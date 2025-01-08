@@ -15,8 +15,10 @@ namespace ConsoleApp1.Samples
     {
         public async Task<UserModel?> GetDataAsync()
         {
+            //결과값
             IEnumerable<UserModel> resultList = [];
 
+            //쿼리 객체를 통한 쿼리식 생성
             Query query = new();
             query.From("user");
             query.Where("id", 1);
@@ -24,8 +26,10 @@ namespace ConsoleApp1.Samples
             //query.From(typeof(UserModel).GetCustomAttribute<TableAttribute>().Name);
             //query.Where(nameof(UserModel.id), 1);
 
+            //쿼리 컴파일을 통한 sql 만들기
             SqlResult sqlResult = new MySqlCompiler().Compile(query);
 
+            //실행될 쿼리와 파라미터
             Console.WriteLine("SELECT Query");
             Console.WriteLine(sqlResult.Sql);
             Console.WriteLine(JsonSerializer.Serialize(sqlResult.NamedBindings));
@@ -53,18 +57,25 @@ namespace ConsoleApp1.Samples
             query.Select("user.id");
             query.Select("user.name");
             query.Select("nickname.nickname");
+            
+            //select 컴파일 없이 그대로 찍고 싶은 경우는 Raw 를 사용
+            //query.SelectRaw("nickname.nickname");
+
 
             query.From("user");
+            
+            //Join 하는 부분 alias 를 줄수도 있음
             query.Join("nickname", j => j.On("user.id", "nickname.user_id"));
 
             query.Where("id", 1);
             
+            //이런식으로 
             //query.From(typeof(UserModel).GetCustomAttribute<TableAttribute>().Name);
             //query.Where(nameof(UserModel.id), 1);
 
             SqlResult sqlResult = new MySqlCompiler().Compile(query);
 
-            Console.WriteLine("SELECT Query");
+            Console.WriteLine("SELECT Join Query");
             Console.WriteLine(sqlResult.Sql);
             Console.WriteLine(JsonSerializer.Serialize(sqlResult.NamedBindings));
 
@@ -103,7 +114,7 @@ namespace ConsoleApp1.Samples
 
             SqlResult sqlResult = new MySqlCompiler().Compile(query);
 
-            Console.WriteLine("SELECT Query");
+            Console.WriteLine("SELECT SubQuery Query");
             Console.WriteLine(sqlResult.Sql);
             Console.WriteLine(JsonSerializer.Serialize(sqlResult.NamedBindings));
 

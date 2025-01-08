@@ -21,15 +21,12 @@ namespace WebApplication1.Controllers
     [Route("[controller]")]
     public class TestController(ILogger<TestController> _logger, TestDbContext _dbContext) : ControllerBase
     {
-        [HttpGet("ef")]
-        public async Task<IEnumerable<UserModel>> GetUserList1Async()
+        [HttpGet("raw")]
+        public async Task<IEnumerable<UserModel>> GetUserListRawAsync()
         {
-            return _dbContext.User.Where(u => u.id == 1).ToList();
-        }
+            //EF 의 경우 강력하고 단순하지만 유연하지 못함
+            //return _dbContext.User.Where(u => u.id == 1).ToList();
 
-        [HttpGet("sqlkata1")]
-        public async Task<IEnumerable<UserModel>> GetUserList2Async()
-        {
             Query query = new();
             query.From("user");
             query.Where("id", 1);
@@ -48,13 +45,45 @@ namespace WebApplication1.Controllers
             return await dbConn.QueryAsync<UserModel>(sqlResult.Sql, sqlResult.NamedBindings, tran);
         }
 
-        [HttpGet("sqlkata2")]
-        public async Task<IEnumerable<UserModel>> GetUserList3Async()
+        [HttpGet("list")]
+        public async Task<IEnumerable<UserModel>> GetUserListAsync()
         {
             //확장메서드를 이용한 단축
             return await _dbContext.GetListAsync<UserModel>(query =>
             {
                 query.Where(nameof(UserModel.id), 1);
+            });
+        }
+
+        [HttpGet("insert")]
+        public async Task InsertTestAsync()
+        {
+            await _dbContext.InsertAsync<UserModel>(insertData =>
+            {
+                insertData[nameof(UserModel.id)] = 2;
+                insertData[nameof(UserModel.name)] = "웹테스트";
+            });
+        }
+
+        [HttpGet("update")]
+        public async Task UpdateTestAsync()
+        {
+            await _dbContext.UpdateAsync<UserModel>(updateData =>
+            {
+                updateData[nameof(UserModel.name)] = "웹테스트22";
+            },
+            query =>
+            {
+                query.Where(nameof(UserModel.id), 2);
+            });
+        }
+
+        [HttpGet("delete")]
+        public async Task DeleteTestAsync()
+        {
+            await _dbContext.DeleteAsync<UserModel>(query =>
+            {
+                query.Where(nameof(UserModel.id), 2);
             });
         }
     }
