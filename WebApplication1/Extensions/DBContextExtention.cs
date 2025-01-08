@@ -29,6 +29,15 @@ public static class DBContextExtention
     }
 
     /// <summary>
+    /// 필요시 로그
+    /// </summary>
+    static void QueryLogging(SqlResult sqlResult)
+    {
+        Console.WriteLine(sqlResult.Sql);
+        Console.WriteLine(JsonSerializer.Serialize(sqlResult.NamedBindings));
+    }
+
+    /// <summary>
     /// 리스트 가져오기
     /// </summary>
     public async static Task<List<T>> GetListAsync<T>(this DbContext dbContext, Action<Query> queryAction)
@@ -40,9 +49,8 @@ public static class DBContextExtention
 
         SqlResult sqlResult = _compiler.Compile(query);
 
-        //_logger.LogInformation(sqlResult.Sql);
-        //_logger.LogInformation(JsonSerializer.Serialize(sqlResult.NamedBindings));
-
+        QueryLogging(sqlResult);
+  
         //현재 DB 커넥션 가져오기
         var dbConn = dbContext.Database.GetDbConnection();
 
@@ -66,8 +74,7 @@ public static class DBContextExtention
 
         SqlResult sqlResult = _compiler.Compile(query);
 
-        //_logger.LogInformation(sqlResult.Sql);
-        //_logger.LogInformation(JsonSerializer.Serialize(sqlResult.NamedBindings));
+        QueryLogging(sqlResult);
 
         //현재 DB 커넥션 가져오기
         var dbConn = dbContext.Database.GetDbConnection();
@@ -95,8 +102,7 @@ public static class DBContextExtention
 
         SqlResult sqlResult = _compiler.Compile(query);
 
-        //_logger.LogInformation(sqlResult.Sql);
-        //_logger.LogInformation(JsonSerializer.Serialize(sqlResult.NamedBindings));
+        QueryLogging(sqlResult);
 
         //현재 DB 커넥션 가져오기
         var dbConn = dbContext.Database.GetDbConnection();
@@ -124,8 +130,7 @@ public static class DBContextExtention
 
         SqlResult sqlResult = _compiler.Compile(query);
 
-        //_logger.LogInformation(sqlResult.Sql);
-        //_logger.LogInformation(JsonSerializer.Serialize(sqlResult.NamedBindings));
+        QueryLogging(sqlResult);
 
         //현재 DB 커넥션 가져오기
         var dbConn = dbContext.Database.GetDbConnection();
@@ -150,8 +155,7 @@ public static class DBContextExtention
 
         SqlResult sqlResult = _compiler.Compile(query);
 
-        //_logger.LogInformation(sqlResult.Sql);
-        //_logger.LogInformation(JsonSerializer.Serialize(sqlResult.NamedBindings));
+        QueryLogging(sqlResult);
 
         //현재 DB 커넥션 가져오기
         var dbConn = dbContext.Database.GetDbConnection();

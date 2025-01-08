@@ -12,6 +12,7 @@ using SqlKata.Compilers;
 
 using System.Text.Json;
 
+using WebApplication1.Dto;
 using WebApplication1.Repository;
 using WebApplication1.Repository.Entities;
 
@@ -51,6 +52,22 @@ namespace WebApplication1.Controllers
             //확장메서드를 이용한 단축
             return await _dbContext.GetListAsync<UserModel>(query =>
             {
+                query.Where(nameof(UserModel.id), 1);
+            });
+        }
+
+        [HttpGet("joinList")]
+        public async Task<IEnumerable<UserNickNameResponse>> GetUserJoinListAsync()
+        {
+            //확장메서드를 이용한 단축
+            return await _dbContext.GetListAsync<UserNickNameResponse>(query =>
+            {
+                query.SelectRaw($"u.{nameof(UserModel.id)} AS {nameof(UserNickNameResponse.Id)}");
+                query.SelectRaw($"u.{nameof(UserModel.name)} AS {nameof(UserNickNameResponse.Name)}");
+                query.SelectRaw($"n.nickname AS {nameof(UserNickNameResponse.NickName)}");
+                query.From("user as u");
+
+                query.Join("nickname as n", j => j.On($"u.{nameof(UserModel.id)}", $"n.user_id"));
                 query.Where(nameof(UserModel.id), 1);
             });
         }
